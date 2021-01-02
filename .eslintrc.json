@@ -17,6 +17,8 @@
         "max-len": [2, { "code": 120 }],
         "indent": [2, 4, { "SwitchCase": 1 }],
         "quotes": [2, "single"],
-        "comma-dangle": ["error", "always-multiline"]
+        "comma-dangle": ["error", "always-multiline"],
+        "no-multi-spaces": "error",
+        "no-trailing-spaces": "error"
     }
 }
