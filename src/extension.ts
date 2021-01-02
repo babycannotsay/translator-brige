@@ -2,10 +2,10 @@ import * as vscode from 'vscode'
 import mappingData from './mapping'
 
 const selectors = [
-	'typescript',
-	'typescriptreact',
-	'javascript',
-	'javascriptreact',
+    'typescript',
+    'typescriptreact',
+    'javascript',
+    'javascriptreact',
 ]
 
 function capitalize (word: string): string {
