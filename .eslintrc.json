@@ -19,6 +19,7 @@
         "quotes": [2, "single"],
         "comma-dangle": ["error", "always-multiline"],
         "no-multi-spaces": "error",
-        "no-trailing-spaces": "error"
+        "no-trailing-spaces": "error",
+        "eol-last": ["error", "always"]
     }
 }
