@@ -10,7 +10,7 @@
 		"Other"
 	],
 	"activationEvents": [
-        "onCommand:translator-brige.helloWorld"
+        "*"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {

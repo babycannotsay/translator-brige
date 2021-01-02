@@ -1,27 +1,43 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from 'vscode'
+import mappingData from './mapping'
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
-
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "translator-brige" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('translator-brige.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from translator-brige!');
-	});
-
-	context.subscriptions.push(disposable);
+function capitalize (word: string): string {
+    if (typeof word !== 'string') return ''
+    return `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`
 }
 
-// this method is called when your extension is deactivated
-export function deactivate() {}
+export function activate (context: vscode.ExtensionContext) {
+    mappingData.forEach(item => {
+        const wordProvider = vscode.languages.registerCompletionItemProvider('javascript', {
+            provideCompletionItems (document, position) {
+                const choice = item.en.join(',')
+                const prefix = item.cn
+                const snippetCompletion = new vscode.CompletionItem(prefix)
+                snippetCompletion.insertText = new vscode.SnippetString(`\${1|${choice}|}`)
+                snippetCompletion.detail = 'sdassa'
+                return [ snippetCompletion ]
+            }
+        })
+        const wordsProvider = vscode.languages.registerCompletionItemProvider('javascript', {
+            provideCompletionItems (document, position) {
+                const prefix = item.cn
+                const choice = item.en.map(en => capitalize(en)).join(',')
+                const linePrefix = document.lineAt(position).text.substr(0, position.character)
+                const index = linePrefix.indexOf(prefix)
+                const delimiterRegExp = /[.-]/
+                const match = linePrefix.split('').reverse().join('').match(delimiterRegExp)
+                const lastDelimiterIndex = match && match.index || linePrefix.length
+                if (index <= 0 || index === lastDelimiterIndex) {
+                    return undefined
+                }
+                const lastBlankIndex = Math.max(linePrefix.lastIndexOf(' ') + 1, 0)
+                const snippetCompletion = new vscode.CompletionItem(linePrefix.slice(lastBlankIndex))
+                const startIndex = Math.max(linePrefix.length - lastDelimiterIndex, lastBlankIndex)
+                const snippetString = `${linePrefix.slice(startIndex, index)}${`\${1|${choice}|}`}`
+                snippetCompletion.insertText = new vscode.SnippetString(snippetString)
+                return [ snippetCompletion ]
+            },
+        })
+        context.subscriptions.push(wordProvider, wordsProvider)
+    })
+}
