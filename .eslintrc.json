@@ -9,11 +9,12 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "@typescript-eslint/naming-convention": "warn",
-        "@typescript-eslint/semi": "warn",
-        "curly": "warn",
-        "eqeqeq": "warn",
-        "no-throw-literal": "warn",
-        "semi": "off"
+        "@typescript-eslint/semi": [2, "never"],
+        "semi": "off",
+        "curly": [2, "multi-line"],
+        "eqeqeq": [2, "smart"],
+        "space-before-function-paren": [2, "always"],
+        "max-len": [2, { "code": 120 }],
+        "indent": [2, 4, { "SwitchCase": 1 }]
     }
 }
