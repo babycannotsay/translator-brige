@@ -16,7 +16,7 @@ function capitalize (word: string): string {
 export function activate (context: vscode.ExtensionContext) {
     Object.values(mappingData).forEach(item => {
         const { cn: prefix, synonyms = [], en } = item
-        const ens = synonyms.reduce((cur, next) => cur.concat(mappingData[next].en), en)
+        const ens = Array.from(new Set(synonyms.reduce((cur, next) => cur.concat(mappingData[next].en), en)))
         const wordProvider = vscode.languages.registerCompletionItemProvider(selectors, {
             provideCompletionItems (document, position) {
                 const choices = ens.join(',')
