@@ -7,21 +7,21 @@ function capitalize (word: string): string {
 }
 
 export function activate (context: vscode.ExtensionContext) {
-    mappingData.forEach(item => {
+    Object.values(mappingData).forEach(item => {
+        const { cn: prefix, synonyms = [], en } = item
+        const ens = synonyms.reduce((cur, next) => cur.concat(mappingData[next].en), en)
         const wordProvider = vscode.languages.registerCompletionItemProvider('javascript', {
             provideCompletionItems (document, position) {
-                const choice = item.en.join(',')
-                const prefix = item.cn
+                const choices = ens.join(',')
                 const snippetCompletion = new vscode.CompletionItem(prefix)
-                snippetCompletion.insertText = new vscode.SnippetString(`\${1|${choice}|}`)
+                snippetCompletion.insertText = new vscode.SnippetString(`\${1|${choices}|}`)
                 snippetCompletion.detail = 'sdassa'
                 return [ snippetCompletion ]
             },
         })
         const wordsProvider = vscode.languages.registerCompletionItemProvider('javascript', {
             provideCompletionItems (document, position) {
-                const prefix = item.cn
-                const choice = item.en.map(en => capitalize(en)).join(',')
+                const choice = ens.map(capitalize).join(',')
                 const linePrefix = document.lineAt(position).text.substr(0, position.character)
                 const index = linePrefix.indexOf(prefix)
                 const delimiterRegExp = /[.-]/
