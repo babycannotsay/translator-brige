@@ -1,7 +1,7 @@
 export default [ {
     cn: '创建',
-    en: [ 'create', 'creation' ]
+    en: [ 'create', 'creation' ],
 }, {
     cn: '删除',
-    en: [ 'detele', 'drop', 'remove' ]
+    en: [ 'detele', 'drop', 'remove' ],
 } ]

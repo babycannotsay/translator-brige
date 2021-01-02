@@ -16,7 +16,7 @@ export function activate (context: vscode.ExtensionContext) {
                 snippetCompletion.insertText = new vscode.SnippetString(`\${1|${choice}|}`)
                 snippetCompletion.detail = 'sdassa'
                 return [ snippetCompletion ]
-            }
+            },
         })
         const wordsProvider = vscode.languages.registerCompletionItemProvider('javascript', {
             provideCompletionItems (document, position) {
