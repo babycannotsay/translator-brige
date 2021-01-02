@@ -1,6 +1,13 @@
 import * as vscode from 'vscode'
 import mappingData from './mapping'
 
+const selectors = [
+	'typescript',
+	'typescriptreact',
+	'javascript',
+	'javascriptreact',
+]
+
 function capitalize (word: string): string {
     if (typeof word !== 'string') return ''
     return `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`
@@ -10,16 +17,15 @@ export function activate (context: vscode.ExtensionContext) {
     Object.values(mappingData).forEach(item => {
         const { cn: prefix, synonyms = [], en } = item
         const ens = synonyms.reduce((cur, next) => cur.concat(mappingData[next].en), en)
-        const wordProvider = vscode.languages.registerCompletionItemProvider('javascript', {
+        const wordProvider = vscode.languages.registerCompletionItemProvider(selectors, {
             provideCompletionItems (document, position) {
                 const choices = ens.join(',')
                 const snippetCompletion = new vscode.CompletionItem(prefix)
                 snippetCompletion.insertText = new vscode.SnippetString(`\${1|${choices}|}`)
-                snippetCompletion.detail = 'sdassa'
                 return [ snippetCompletion ]
             },
         })
-        const wordsProvider = vscode.languages.registerCompletionItemProvider('javascript', {
+        const wordsProvider = vscode.languages.registerCompletionItemProvider(selectors, {
             provideCompletionItems (document, position) {
                 const choice = ens.map(capitalize).join(',')
                 const linePrefix = document.lineAt(position).text.substr(0, position.character)
